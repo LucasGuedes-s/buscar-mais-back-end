@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+model Usuario {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome           String
+  cpf            String? 
+  estado         String?
+  cidade         String?
+  endereco       String?
+  telefone       String?
+  fcmToken       String?
+  gmail          String   @unique 
+  senha          String
+  carrinho       Carrinho[]
+  foto           String?
+  pedidos        Pedido[] 
+}
+
+model Estabelecimento {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  gmail     String     @unique
+  senha     String
+  nome      String
+  foto      String?
+  descricao String
+  endereco  String
+  telefone  String
+  horario   String
+  categoria String
+  cidade    String
+  estado    String
+  vendas    Int        @default(0)
+  produtos  Produto[]
+  pedidos   Pedido[]  
+}
+
+model Carrinho {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  String
+  produto    Produto  @relation(fields: [produtoId], references: [id])
+  produtoId  String
+  quantidade Int      @default(1)
+}
+
+model Pedido {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  usuario           Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId         String
+  total             Float
+  status            String   @default("Pendente")
+  pagamento         String   
+  estabelecimento   Estabelecimento @relation(fields: [estabelecimentoId], references: [id])
+  estabelecimentoId String
+  endereco          String
+  observacao        String?
+  dataPedido        DateTime @default(now())
+  pedidoProdutos    PedidoProduto[] // nova relação
+}
+
+model Produto {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  foto             String?
+  preco            Float
+  descricao        String?
+  quantidadeEstoque Int
+  nome             String
+  categoria        String
+  avaliacao        Float      @default(0)
+  entrega          String     @default("Entrega")
+  frete            Float      @default(0)
+  cores_disponiveis  String[]
+  tamanhos_disponiveis String[]
+  estabelecimento  Estabelecimento @relation(fields: [estabelecimentoId], references: [id])
+  estabelecimentoId String
+  usuariosCarrinho Carrinho[]
+  pedidoProdutos   PedidoProduto[] // nova relação
+}
+
+model PedidoProduto {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
+  pedidoId   String
+  produto    Produto  @relation(fields: [produtoId], references: [id])
+  produtoId  String
+  quantidade Int      @default(1)
+}
