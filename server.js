@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { config } = require("dotenv");
-const { MercadoPagoConfig, Payment } = require("mercadopago");
+//const { MercadoPagoConfig, Payment } = require("mercadopago");
 
 config();
 
@@ -9,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/*
 
 const admin = require("firebase-admin");
 
@@ -35,9 +36,6 @@ async function sendNotification(fcmToken) {
   }
 }
 
-sendNotification('egFzgxBCRISfOWPdu-okGM:APA91bHrY8GGFfMi37ZMaC8A3_SIwDer9OY_h_1Do_wPtiHAOYZyoEozYC42wUnqfaGeo4uzyD3Lp06ZwXTLU_Y5gkwYfkHwrlSAPdK90d1DwF2y_77gDn0')
-
-// Inicializa o cliente do Mercado Pago
 const mpClient = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
   options: { timeout: 5000 },
@@ -83,7 +81,7 @@ app.post("/criar-pix", async (req, res) => {
     console.error("Erro ao criar pagamento PIX:", error);
     res.status(500).json({ error: "Erro ao criar pagamento PIX", details: error });
   }
-});
+});*/
 
 // Rotas existentes
 const produtosRoutes = require("./routes/produtos");
